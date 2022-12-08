@@ -28,7 +28,7 @@ COPY Gemfile.lock /eyedp/Gemfile.lock
 # RUN chown -R appuser:appuser /eyedp
 USER appuser
 
-RUN bundle install --without development test
+RUN bundle install --with development test
 
 COPY . /eyedp
 COPY --from=frontend-build /eyedp/node_modules /eyedp/node_modules
