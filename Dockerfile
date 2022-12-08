@@ -1,3 +1,9 @@
+FROM node:16 as frontend-build
+COPY . /eyedp
+WORKDIR /eyedp
+RUN npm install
+
+
 FROM ruby:2.7
 
 ENV LANG C.UTF-8
@@ -25,10 +31,10 @@ USER appuser
 RUN bundle install --without development test
 
 COPY . /eyedp
+COPY --from=frontend-build /eyedp/node_modules /eyedp/node_modules
 
 USER root
 RUN chown -R appuser:appuser /eyedp
 USER appuser
-RUN npm install
 RUN SECRET_KEY_BASE=`bin/rake secret` bundle exec rake assets:precompile
 CMD bundle exec puma -C config/puma.rb
