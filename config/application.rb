@@ -68,7 +68,11 @@ module EyedP
     end
 
     config.action_mailer.default_url_options = { host: ENV['EMAIL_DOMAIN'] }
-    hash = `git rev-parse HEAD`.chomp.squeeze!
+    begin
+      hash = `git rev-parse HEAD`.chomp.squeeze!
+    rescue => error
+      print error.message
+    end
     hash ||= ENV['HEROKU_SLUG_COMMIT']
     GIT_SHA = hash
   end
